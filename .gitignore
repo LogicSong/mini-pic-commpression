@@ -1,0 +1,5 @@
+# 避免提交的文件夹
+node_modules
+.vscode
+
+# 避免提交的文件
