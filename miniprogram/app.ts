@@ -1,7 +1,7 @@
 // app.ts
 App<IAppOption>({
   globalData: {},
-  onLaunch() {
+  onLaunch(options) {
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -15,4 +15,10 @@ App<IAppOption>({
       },
     })
   },
+  onShow(options) {
+    console.log(options);
+  },
+  onHide() {
+    console.log('hide');
+  }
 })

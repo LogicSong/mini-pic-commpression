@@ -6,7 +6,7 @@
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
   "libVersion": "2.20.1",
-  "projectname": "speedtest",
+  "projectname": "image-tool",
   "scripts": {
     "beforeCompile": "npm run tsc",
     "beforePreview": "npm run tsc",
@@ -30,6 +30,7 @@
     "checkSiteMap": true,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
+    "lazyloadPlaceholderEnable": false,
     "useMultiFrameRuntime": true,
     "useApiHook": true,
     "useApiHostProcess": true,
@@ -46,7 +47,9 @@
     "disableUseStrict": false,
     "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false,
+    "useCompilerPlugins": [
+      "typescript"
+    ],
     "ignoreUploadUnusedFiles": true
   },
   "simulatorType": "wechat",
