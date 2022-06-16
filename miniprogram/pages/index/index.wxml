@@ -1,14 +1,17 @@
 <!--index.wxml-->
 <view class="container">
-  <picker bindchange="bindPickerChange" value="{{choosedUploadWay}}" range="{{uploadWays}}">
     <view class="image" bindtap="chooseUploadWay">
       <block wx:if="{{!hasUpload}}">
         <text class="iconfont icon-imageload"></text>
         <text style="font-size:12px;margin-top:6px;color:#bbb">点击上传图片</text>
       </block>
     </view>
-    <!-- <view class="picker">
-      当前选择：{{uploadWays[choosedUploadWay]}}
-    </view> -->
-  </picker>
+  <van-action-sheet
+    show="{{ showUploadWays }}"
+    actions="{{ uploadWays }}"
+    cancel-text="取消"
+    bind:close="hideUploadWays"
+    bind:cancel="hideUploadWays"
+    bind:select="onSelect"
+  />
 </view>

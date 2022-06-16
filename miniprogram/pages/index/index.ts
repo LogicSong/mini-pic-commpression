@@ -9,8 +9,13 @@ const app = getApp<IAppOption>();
 Page({
   data: {
     hasUpload: false, //是否已经上传图片
-    uploadWays: ["拍照", "从手机相册选择"],
-    choosedUploadWay: 0,
+    uploadWays: [
+      {
+        name: "拍照",
+      },
+      { name: "从手机相册选择" },
+    ],
+    showUploadWays: false,
     motto: "Hello World",
     userInfo: {},
     hasUserInfo: false,
@@ -22,11 +27,19 @@ Page({
   },
   // 选择上传图片的方式
   chooseUploadWay() {
-    console.log("chooseUploadWay");
+    this.setData({
+      showUploadWays: true,
+    });
   },
 
-  bindPickerChange(value) {
-    console.log(value);
+  hideUploadWays() {
+    this.setData({
+      showUploadWays: false,
+    });
+  },
+
+  onSelect(e) {
+    console.log(e);
   },
   // 事件处理函数
   bindViewTap() {
