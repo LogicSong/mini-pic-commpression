@@ -8,7 +8,7 @@ const app = getApp<IAppOption>();
 
 Page({
   data: {
-    hasUpload: false, //是否已经上传图片
+    imgUrl: null, //上传的图片地址
     uploadWays: [
       {
         name: "拍照",
@@ -39,7 +39,39 @@ Page({
   },
 
   onSelect(e) {
-    console.log(e);
+    const that = this;
+    if (e.detail.name === "从手机相册选择") {
+      wx.chooseMedia({
+        count: 1,
+        mediaType: ["image"],
+        sourceType: ["album"],
+        sizeType: ["original"],
+        success(res) {
+          console.log(res);
+          that.setData({
+            imgUrl: res.tempFiles[0].tempFilePath,
+          });
+        },
+        fail() {
+          wx.showToast({
+            title: "图片读取失败",
+          });
+        },
+      });
+    } else {
+      // 打开相机
+      wx.chooseMedia({
+        count: 1,
+        mediaType: ["image"],
+        sourceType: ["camera"],
+        sizeType: ["original"],
+        camera: "back",
+        success(res) {
+          console.log(res.tempFiles.tempFilePath);
+          console.log(res.tempFiles.size);
+        },
+      });
+    }
   },
   // 事件处理函数
   bindViewTap() {

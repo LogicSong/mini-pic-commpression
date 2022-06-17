@@ -1,10 +1,11 @@
 <!--index.wxml-->
 <view class="container">
     <view class="image" bindtap="chooseUploadWay">
-      <block wx:if="{{!hasUpload}}">
+      <block wx:if="{{!imgUrl}}">
         <text class="iconfont icon-imageload"></text>
         <text style="font-size:12px;margin-top:6px;color:#bbb">点击上传图片</text>
       </block>
+      <image wx:else bindload="onLoadImage" mode="aspectFit" src="{{imgUrl}}" style="width:100%;height:90%;" />
     </view>
   <van-action-sheet
     show="{{ showUploadWays }}"
