@@ -32,8 +32,8 @@ page {
 }
 .image {
   margin-top: 50rpx;
-  width: 500rpx;
-  height: 700rpx;
+  width: 200px;
+  height: 250px;
   background-color: #fff;
   box-shadow: 0 0 15px 0px #ddd;
   display: flex;

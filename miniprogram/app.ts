@@ -4,25 +4,15 @@
  */
 // app.ts
 App<IAppOption>({
-  globalData: {},
-  onLaunch(options) {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync("logs") || [];
-    logs.unshift(Date.now());
-    wx.setStorageSync("logs", logs);
-
-    // 登录
-    wx.login({
-      success: (res) => {
-        // console.log(res.code)
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      },
-    });
+  // 定义一个变量存储屏幕属性
+  glabalData: {
+    screenHeight: 0,
+    screenWidth: 0,
   },
-  onShow(options) {
-    // console.log(options);
-  },
-  onHide() {
-    // console.log('hide');
+  // 生命周期回调——监听小程序初始化
+  onLaunch() {
+    const info = wx.getSystemInfoSync();
+    this.glabalData.screenHeight = info.screenHeight;
+    this.glabalData.screenWidth = info.screenWidth;
   },
 });
