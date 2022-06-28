@@ -105,13 +105,26 @@ Page({
         // canvas上下文
         const ctx = canvas.getContext("2d");
         //关键代码
-        canvas.width = imgInfo.width;
-        canvas.height = imgInfo.height;
-        // ctx.scale(app.glabalData.pixelRatio, app.glabalData.pixelRatio);
+        if (imgInfo.width <= 4000) {
+          canvas.width = imgInfo.width;
+          canvas.height = imgInfo.height;
+        } else {
+          // width/height值太大时会导致canvas不显示
+          const { width, height } = imgInfo;
+          const ratio = width / height;
+          if (width > height) {
+            canvas.width = 4000;
+            canvas.height = 4000 / ratio;
+          } else {
+            canvas.height = 4000;
+            canvas.width = 4000 * ratio;
+          }
+          ctx.scale(canvas.width / width, canvas.height / height);
+        }
         that.setData({
           canvasSize: {
-            width: imgInfo.width / app.glabalData.pixelRatio,
-            height: imgInfo.height / app.glabalData.pixelRatio,
+            width: canvas.width / app.glabalData.pixelRatio,
+            height: canvas.height / app.glabalData.pixelRatio,
           },
         });
 
@@ -216,10 +229,10 @@ Page({
   },
   onLoad() {
     // @ts-ignore
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true,
-      });
-    }
+    // if (wx.getUserProfile) {
+    //   this.setData({
+    //     canIUseGetUserProfile: true,
+    //   });
+    // }
   },
 });
