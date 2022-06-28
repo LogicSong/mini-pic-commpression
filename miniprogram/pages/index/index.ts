@@ -8,23 +8,13 @@ const app = getApp<IAppOption>();
 
 Page({
   data: {
-    // canvasWidth: app.globalData.screenWidth,
-    imgInfo: null,
-    imgUrl: null, //上传的图片地址
-    orignImgInfo: null,
-    compressedImgInfo: null,
+    orignImgInfo: null, // 原始图片信息
+    compressedImgInfo: null, // 压缩图片信息
     canvasSize: {
       width: "200px",
       height: "200px",
     },
-    motto: "Hello World",
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse("button.open-type.getUserInfo"),
-    canIUseGetUserProfile: false,
-    canIUseOpenData:
-      wx.canIUse("open-data.type.userAvatarUrl") &&
-      wx.canIUse("open-data.type.userNickName"), // 如需尝试获取用户信息可改为false
+    compressRatio: 0.7,
   },
   // 选择上传图片的方式
   chooseUploadWay() {
@@ -45,9 +35,6 @@ Page({
             },
           });
         } else {
-          wx.showToast({
-            title: "100",
-          });
           wx.chooseMedia({
             count: 1,
             mediaType: ["image"],
@@ -77,16 +64,16 @@ Page({
                   });
                 },
                 fail(e) {
-                  wx.showToast({
-                    title: "wx.getImageInfo失败:" + e.errMsg,
-                  });
+                  // wx.showToast({
+                  //   title: "wx.getImageInfo失败:" + e.errMsg,
+                  // });
                 },
               });
             },
             fail(e) {
-              wx.showToast({
-                title: "chooseMedia失败:" + e.errMsg,
-              });
+              // wx.showToast({
+              //   title: "chooseMedia失败:" + e.errMsg,
+              // });
             },
           });
         }
@@ -98,7 +85,7 @@ Page({
   },
 
   // 绘制图片
-  drawCanvas(imgInfo, quality = 0.96) {
+  drawCanvas(imgInfo) {
     const that = this;
     const query = wx.createSelectorQuery();
     query
@@ -157,9 +144,6 @@ Page({
         };
         */
         img.onload = function (e) {
-          wx.showToast({
-            title: "333",
-          });
           ctx.drawImage(img, 0, 0, imgInfo.width, imgInfo.height);
 
           wx.canvasToTempFilePath({
@@ -170,7 +154,7 @@ Page({
             destWidth: canvas.width,
             destHeight: canvas.height,
             fileType: "jpg",
-            quality,
+            quality: 1 - that.data.compressRatio / 100,
             canvasId: "compressCanvasId",
             canvas: canvas,
             fail: (e) => {
@@ -192,10 +176,6 @@ Page({
                     filePath: res.tempFilePath,
                     success(res3) {
                       compressedImgInfo.size = res3.size;
-                      wx.showModal({
-                        title: "提示",
-                        content: `origin-size:${that.data.orignImgInfo.size}; compressed-size: ${compressedImgInfo.size};`,
-                      });
                       that.setData({ compressedImgInfo });
                     },
                   });
@@ -207,12 +187,18 @@ Page({
         };
       });
   },
-
-  // 事件处理函数
-  bindViewTap() {
-    wx.navigateTo({
-      url: "../logs/logs",
-    });
+  // 调整压缩强度
+  changeCompressRatio(value) {
+    this.setData(
+      {
+        compressRatio: value.detail.value,
+      },
+      () => {
+        if (this.data.orignImgInfo) {
+          this.drawCanvas(this.data.orignImgInfo);
+        }
+      }
+    );
   },
   onLoad() {
     // @ts-ignore
@@ -221,26 +207,5 @@ Page({
         canIUseGetUserProfile: true,
       });
     }
-  },
-  getUserProfile() {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: "展示用户信息", // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        console.log(res);
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true,
-        });
-      },
-    });
-  },
-  getUserInfo(e: any) {
-    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-    console.log(e);
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true,
-    });
   },
 });

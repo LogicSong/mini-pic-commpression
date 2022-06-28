@@ -7,13 +7,19 @@
       </block>
       <block wx:else>
         <image mode="aspectFit" src="{{compressedImgInfo.src}}" style="width:100%;height:90%;" />
-        <!-- <text class="reload-image-text" selectable="false" space="false" decode="false">
+        <text class="reload-image-text" selectable="false" space="false" decode="false">
           点击更换图片
-        </text> -->
+        </text>
         <!-- <view class="image-info" hover-class="none" hover-stop-propagation="false">
         
         </view> -->
       </block>
+    </view>
+    <view class="compress-radio">
+        <text class="compress-radio-title">设置压缩强度</text>
+        <view class="compress-radio-slider">
+            <slider bindchange="changeCompressRatio" min="5" max="95" show-value block-size="14" value="30" />
+        </view>
     </view>
     <canvas type="2d" id="compressCanvasId" style="width:{{canvas.width}};height:{{canvas.height}};"></canvas>
 </view>

@@ -5,9 +5,9 @@ page {
 .container {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   /* background-color: #eee; */
-  justify-content: center;
+  align-items: center;
 }
 @font-face {
   font-family: "iconfont";
@@ -55,7 +55,23 @@ page {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: #aaa;
 }
 
 .image-info {
+}
+
+.compress-radio {
+  margin-top: 15px;
+  width: 250px;
+}
+
+.compress-radio > .compress-radio-title {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.compress-radio-slider > slider {
+  margin: 3px 5px;
 }
