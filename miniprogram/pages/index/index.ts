@@ -32,8 +32,7 @@ Page({
             sizeType: ["original"],
             camera: "back",
             success(res) {
-              console.log(res.tempFiles.tempFilePath);
-              console.log(res.tempFiles.size);
+              that.getImageInfo(res.tempFiles[0].tempFilePath);
             },
           });
         } else {
@@ -44,39 +43,7 @@ Page({
             sizeType: ["original"],
             success(res) {
               // 获取图片信息
-              wx.getImageInfo({
-                src: res.tempFiles[0].tempFilePath,
-                success(res2) {
-                  const imgInfo = {
-                    src: res.tempFiles[0].tempFilePath,
-                    width: res2.width,
-                    height: res2.height,
-                    type: res2.type,
-                  };
-                  wx.getFileInfo({
-                    filePath: res.tempFiles[0].tempFilePath,
-                    success(res3) {
-                      imgInfo.size = res3.size;
-                      const originSize =
-                        res3.size > 1024 * 1024
-                          ? (res3.size / (1024 * 1024)).toFixed(2) + "MB"
-                          : res3.size > 1024
-                          ? (res3.size / 1024).toFixed(2) + "KB"
-                          : res3.size + "Byte";
-                      that.setData({ orignImgInfo: imgInfo, originSize });
-                      // 绘制图片
-                      setTimeout(function () {
-                        that.drawCanvas(imgInfo);
-                      }, 10);
-                    },
-                  });
-                },
-                fail(e) {
-                  // wx.showToast({
-                  //   title: "wx.getImageInfo失败:" + e.errMsg,
-                  // });
-                },
-              });
+              that.getImageInfo(res.tempFiles[0].tempFilePath);
             },
             fail(e) {
               // wx.showToast({
@@ -88,6 +55,43 @@ Page({
       },
       fail(res) {
         console.log(res.errMsg);
+      },
+    });
+  },
+
+  getImageInfo(src) {
+    let that = this;
+    wx.getImageInfo({
+      src: src,
+      success(res1) {
+        const imgInfo = {
+          src: src,
+          width: res1.width,
+          height: res1.height,
+          type: res1.type,
+        };
+        wx.getFileInfo({
+          filePath: src,
+          success(res2) {
+            imgInfo.size = res2.size;
+            const originSize =
+              res2.size > 1024 * 1024
+                ? (res2.size / (1024 * 1024)).toFixed(2) + "MB"
+                : res2.size > 1024
+                ? (res2.size / 1024).toFixed(2) + "KB"
+                : res2.size + "Byte";
+            that.setData({ orignImgInfo: imgInfo, originSize });
+            // 绘制图片
+            setTimeout(function () {
+              that.drawCanvas(imgInfo);
+            }, 10);
+          },
+        });
+      },
+      fail(e) {
+        // wx.showToast({
+        //   title: "wx.getImageInfo失败:" + e.errMsg,
+        // });
       },
     });
   },

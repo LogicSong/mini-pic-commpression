@@ -3,7 +3,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "图片压缩",
+    "navigationBarTitleText": "压缩大师",
     "navigationBarTextStyle": "black"
   },
   "networkTimeout": {
