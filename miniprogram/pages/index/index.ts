@@ -9,9 +9,14 @@ const app = getApp<IAppOption>();
 Page({
   data: {
     // canvasWidth: app.globalData.screenWidth,
-
+    imgInfo: null,
     imgUrl: null, //上传的图片地址
-    ctx: null,
+    orignImgInfo: null,
+    compressedImgInfo: null,
+    canvasSize: {
+      width: "200px",
+      height: "200px",
+    },
     motto: "Hello World",
     userInfo: {},
     hasUserInfo: false,
@@ -21,33 +26,12 @@ Page({
       wx.canIUse("open-data.type.userAvatarUrl") &&
       wx.canIUse("open-data.type.userNickName"), // 如需尝试获取用户信息可改为false
   },
-  onReady() {
-    const query = wx.createSelectorQuery();
-    query
-      .select("#compressCanvasId")
-      .fields({ node: true, size: true })
-      .exec((res) => {
-        console.log(res);
-        const canvas = res[0].node;
-        canvas.width = 200;
-        canvas.height = 200;
-        // const ctx = canvas.getContext('2d');
-
-        // const dpr = wx.getSystemInfoSync().pixelRatio
-        // canvas.width = res[0].width * dpr
-        // canvas.height = res[0].height * dpr
-        // ctx.scale(dpr, dpr)
-
-        // ctx.fillRect(0, 0, 100, 100)
-      });
-  },
   // 选择上传图片的方式
   chooseUploadWay() {
     const that = this;
     wx.showActionSheet({
       itemList: ["拍照", "从手机相册选择"],
       success(res) {
-        console.log(res.tapIndex);
         if (res.tapIndex === 0) {
           wx.chooseMedia({
             count: 1,
@@ -61,40 +45,47 @@ Page({
             },
           });
         } else {
+          wx.showToast({
+            title: "100",
+          });
           wx.chooseMedia({
             count: 1,
             mediaType: ["image"],
             sourceType: ["album"],
             sizeType: ["original"],
             success(res) {
-              const query = wx.createSelectorQuery();
-              query
-                .select("#compressCanvasId")
-                .fields({ node: true, size: true })
-                .exec((res2) => {
-                  // canvas实例
-                  const canvas = res2[0].node;
-                  console.log(canvas);
-                  // canvas上下文
-                  const ctx = canvas.getContext("2d");
-                  // 创建图片
-                  let img = canvas.createImage();
-                  img.src = res.tempFiles[0].tempFilePath;
-                  img.onload = (e) => {
-                    // 计算图片加到canvas时的长宽
-                    // canvas宽200高225
-                    // 图片198|240
-                    // if()
-                    // console.log(img.height, img.width);
-                    // img.height = 225;
-                    // img.width = 200;
-                    const height = ctx.drawImage(img, 0, 0, 200, 200);
+              // 获取图片信息
+              wx.getImageInfo({
+                src: res.tempFiles[0].tempFilePath,
+                success(res2) {
+                  const imgInfo = {
+                    src: res.tempFiles[0].tempFilePath,
+                    width: res2.width,
+                    height: res2.height,
+                    type: res2.type,
                   };
-                });
+                  wx.getFileInfo({
+                    filePath: res.tempFiles[0].tempFilePath,
+                    success(res3) {
+                      imgInfo.size = res3.size;
+                      that.setData({ orignImgInfo: imgInfo });
+                      // 绘制图片
+                      setTimeout(function () {
+                        that.drawCanvas(imgInfo);
+                      }, 10);
+                    },
+                  });
+                },
+                fail(e) {
+                  wx.showToast({
+                    title: "wx.getImageInfo失败:" + e.errMsg,
+                  });
+                },
+              });
             },
-            fail() {
+            fail(e) {
               wx.showToast({
-                title: "图片读取失败",
+                title: "chooseMedia失败:" + e.errMsg,
               });
             },
           });
@@ -104,6 +95,117 @@ Page({
         console.log(res.errMsg);
       },
     });
+  },
+
+  // 绘制图片
+  drawCanvas(imgInfo, quality = 0.96) {
+    const that = this;
+    const query = wx.createSelectorQuery();
+    query
+      .select("#compressCanvasId")
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        // canvas实例
+        const canvas = res[0].node;
+        // canvas上下文
+        const ctx = canvas.getContext("2d");
+        //关键代码
+        canvas.width = imgInfo.width;
+        canvas.height = imgInfo.height;
+        // ctx.scale(app.glabalData.pixelRatio, app.glabalData.pixelRatio);
+        that.setData({
+          canvasSize: {
+            width: imgInfo.width / app.glabalData.pixelRatio,
+            height: imgInfo.height / app.glabalData.pixelRatio,
+          },
+        });
+
+        // 创建图片
+        let img = canvas.createImage();
+        img.src = imgInfo.src;
+        /*
+        img.onload = (e) => {
+          let cW = imgInfo.width;
+          let cH = imgInfo.height;
+          let sx = 0;
+          let sy = 0;
+          const ratio = cW / cH;
+          // 当宽高大于画布宽高时，设置为画布宽高
+          if (cW > canvas.width) {
+            cW = canvas.width;
+            cH = cW / ratio;
+          }
+          if (cH > canvas.height) {
+            cH = canvas.height;
+            cW = cH * ratio;
+          }
+          // 居中
+          if (cW < canvas.width) {
+            sx = (canvas.width - cW) / 2;
+          }
+          if (cH < canvas.height) {
+            sy = (canvas.height - cH) / 2;
+          }
+
+          ctx.drawImage(img, 0, 0, imgInfo.width, imgInfo.height);
+
+          // 添加文字
+          ctx.fillStyle = "#aaa";
+          ctx.font = "16px serif";
+          ctx.textAlign = "center";
+          ctx.fillText("点击更换图片", canvas.width / 2, canvas.height / 2);
+        };
+        */
+        img.onload = function (e) {
+          wx.showToast({
+            title: "333",
+          });
+          ctx.drawImage(img, 0, 0, imgInfo.width, imgInfo.height);
+
+          wx.canvasToTempFilePath({
+            x: 0,
+            y: 0,
+            width: canvas.width,
+            height: canvas.height,
+            destWidth: canvas.width,
+            destHeight: canvas.height,
+            fileType: "jpg",
+            quality,
+            canvasId: "compressCanvasId",
+            canvas: canvas,
+            fail: (e) => {
+              wx.showToast({
+                title: e.errMsg,
+              });
+            },
+            success: function success(res) {
+              wx.getImageInfo({
+                src: res.tempFilePath,
+                success(res2) {
+                  const compressedImgInfo = {
+                    src: res.tempFilePath,
+                    width: res2.width,
+                    height: res2.height,
+                    type: res2.type,
+                  };
+                  wx.getFileInfo({
+                    filePath: res.tempFilePath,
+                    success(res3) {
+                      compressedImgInfo.size = res3.size;
+                      wx.showModal({
+                        title: "提示",
+                        content: `origin-size:${that.data.orignImgInfo.size}; compressed-size: ${compressedImgInfo.size};`,
+                      });
+                      that.setData({ compressedImgInfo });
+                    },
+                  });
+                },
+              });
+              // that.setData()
+            },
+          });
+        };
+      });
   },
 
   // 事件处理函数
