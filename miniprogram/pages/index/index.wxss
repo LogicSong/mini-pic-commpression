@@ -47,7 +47,7 @@ page {
 #compressCanvasId {
   position: absolute;
   left: 0;
-  top: 1000px;
+  top: -1000px;
 }
 
 .reload-image-text {
@@ -82,4 +82,16 @@ page {
 
 .compress-radio-slider > slider {
   margin: 3px 5px;
+}
+
+.btn-area {
+  width: 150px;
+  margin-top: 20px;
+}
+
+.btn-area > button {
+  width: 100%;
+  border-color: skyblue !important;
+  background-color: skyblue !important;
+  color: #fff !important;
 }

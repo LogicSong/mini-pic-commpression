@@ -26,5 +26,8 @@
             <slider bindchange="changeCompressRatio" min="5" max="95" show-value block-size="14" value="30" activeColor="skyblue" />
         </view>
     </view>
+    <view class="btn-area" hover-class="none" hover-stop-propagation="false">
+      <button type="default" plain="true" size="mini" bindtap="handleSave">保存至相册</button>
+    </view>
     <canvas type="2d" id="compressCanvasId" style="width:{{canvas.width}};height:{{canvas.height}};"></canvas>
 </view>

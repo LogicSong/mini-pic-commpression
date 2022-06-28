@@ -227,6 +227,31 @@ Page({
       }
     );
   },
+  // 保存图片至相册
+  handleSave() {
+    if (!this.data.compressedImgInfo) {
+      wx.showModal({
+        title: "提示",
+        content: "请先上传一张图片",
+        showCancel: false,
+      });
+    }
+    wx.saveImageToPhotosAlbum({
+      filePath: this.data.compressedImgInfo.src,
+      success(res) {
+        wx.showToast({
+          title: "保存成功",
+          icon: "success",
+        });
+      },
+      fail(res) {
+        wx.showToast({
+          title: "保存失败",
+          icon: "error",
+        });
+      },
+    });
+  },
   onLoad() {
     // @ts-ignore
     // if (wx.getUserProfile) {
