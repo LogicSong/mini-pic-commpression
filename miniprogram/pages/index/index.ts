@@ -14,7 +14,9 @@ Page({
       width: "200px",
       height: "200px",
     },
-    compressRatio: 0.7,
+    compressRatio: 30,
+    originSize: null,
+    compressedSize: null,
   },
   // 选择上传图片的方式
   chooseUploadWay() {
@@ -55,7 +57,13 @@ Page({
                     filePath: res.tempFiles[0].tempFilePath,
                     success(res3) {
                       imgInfo.size = res3.size;
-                      that.setData({ orignImgInfo: imgInfo });
+                      const originSize =
+                        res3.size > 1024 * 1024
+                          ? (res3.size / (1024 * 1024)).toFixed(2) + "MB"
+                          : res3.size > 1024
+                          ? (res3.size / 1024).toFixed(2) + "KB"
+                          : res3.size + "Byte";
+                      that.setData({ orignImgInfo: imgInfo, originSize });
                       // 绘制图片
                       setTimeout(function () {
                         that.drawCanvas(imgInfo);
@@ -176,7 +184,13 @@ Page({
                     filePath: res.tempFilePath,
                     success(res3) {
                       compressedImgInfo.size = res3.size;
-                      that.setData({ compressedImgInfo });
+                      const compressedSize =
+                        res3.size > 1024 * 1024
+                          ? (res3.size / (1024 * 1024)).toFixed(2) + "MB"
+                          : res3.size > 1024
+                          ? (res3.size / 1024).toFixed(2) + "KB"
+                          : res3.size + "Byte";
+                      that.setData({ compressedImgInfo, compressedSize });
                     },
                   });
                 },

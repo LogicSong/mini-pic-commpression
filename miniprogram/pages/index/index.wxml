@@ -10,15 +10,20 @@
         <text class="reload-image-text" selectable="false" space="false" decode="false">
           点击更换图片
         </text>
-        <!-- <view class="image-info" hover-class="none" hover-stop-propagation="false">
-        
-        </view> -->
+        <view class="image-info" hover-class="none" hover-stop-propagation="false">
+          <view class="image-info-item" hover-class="none" hover-stop-propagation="false">
+            原始图片大小：{{originSize}}
+          </view>
+          <view class="image-info-item" hover-class="none" hover-stop-propagation="false">
+            预估压缩后图片大小：{{compressedSize}}
+          </view>
+        </view>
       </block>
     </view>
     <view class="compress-radio">
-        <text class="compress-radio-title">设置压缩强度</text>
+        <text class="compress-radio-title">压缩强度</text>
         <view class="compress-radio-slider">
-            <slider bindchange="changeCompressRatio" min="5" max="95" show-value block-size="14" value="30" />
+            <slider bindchange="changeCompressRatio" min="5" max="95" show-value block-size="14" value="30" activeColor="skyblue" />
         </view>
     </view>
     <canvas type="2d" id="compressCanvasId" style="width:{{canvas.width}};height:{{canvas.height}};"></canvas>
