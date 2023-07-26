@@ -264,4 +264,16 @@ Page({
     //   });
     // }
   },
+  onShareAppMessage: function () {
+    return {
+      title: "卡卡就是压缩",
+      path: "/pages/index/index",
+    };
+  },
+  onShareTimeline() {
+    return {
+      title: "卡卡就是压缩",
+      imageUrl: "/assets/images/shareImg.png",
+    };
+  },
 });

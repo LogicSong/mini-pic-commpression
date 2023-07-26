@@ -1,17 +1,7 @@
 {
   "description": "项目配置文件",
-  "packOptions": {
-    "ignore": []
-  },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "libVersion": "2.20.1",
-  "projectname": "image-tool",
-  "scripts": {
-    "beforeCompile": "npm run tsc",
-    "beforePreview": "npm run tsc",
-    "beforeUpload": "npm run tsc"
-  },
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -32,8 +22,6 @@
     "compileHotReLoad": false,
     "lazyloadPlaceholderEnable": false,
     "useMultiFrameRuntime": true,
-    "useApiHook": true,
-    "useApiHostProcess": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -59,6 +47,21 @@
   },
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
+  "condition": {},
+  "srcMiniprogramRoot": "miniprogram/",
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "libVersion": "2.20.1",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
   "appid": "wxb49e81abc175bc3c",
-  "condition": {}
+  "scripts": {
+    "beforeCompile": "npm run tsc",
+    "beforePreview": "npm run tsc",
+    "beforeUpload": "npm run tsc"
+  }
 }
