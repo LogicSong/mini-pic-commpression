@@ -241,7 +241,7 @@ Page({
       });
     }
     wx.saveImageToPhotosAlbum({
-      filePath: this.data.compressedImgInfo.src,
+      filePath: this.data.compressedImgInfo?.src || '',
       success(res) {
         wx.showToast({
           title: "保存成功",
